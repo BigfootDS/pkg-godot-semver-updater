@@ -27,6 +27,11 @@ export function determineReleaseType(messages) {
   return releaseType;
 }
 
+/** Return the first non-merge commit that does not use conventional commit syntax. */
+export function findNonConventionalCommit(messages) {
+  return messages.find((message) => !isMergeCommit(message) && releaseTypeForCommit(message) === undefined);
+}
+
 /** Bump a stable semantic version by one release level. */
 export function bumpVersion(version, releaseType) {
   const match = versionPattern.exec(version);
@@ -85,6 +90,10 @@ function releaseTypeForCommit(message) {
   return "patch";
 }
 
+function isMergeCommit(message) {
+  return message.startsWith("Merge ");
+}
+
 function getLastReleaseTag() {
   const tags = runGit(["tag", "--merged", "HEAD", "--sort=-creatordate"])
     .split("\n")
@@ -111,8 +120,9 @@ function createReleasePlan() {
     return { release: false };
   }
 
-  if (releaseType === undefined) {
-    throw new Error("No conventional commits were found since the previous release.");
+  const invalidCommit = findNonConventionalCommit(messages);
+  if (invalidCommit !== undefined) {
+    throw new Error(`Non-conventional commit found: ${JSON.stringify(invalidCommit.split(/\r?\n/, 1)[0])}`);
   }
 
   if (manifest.version !== lastVersion) {

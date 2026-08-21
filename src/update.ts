@@ -1,5 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { valid as validSemver } from "semver";
+import { isSemanticVersion } from "./semver.js";
 
 export interface UpdateGodotProjectVersionOptions {
   /** Path to the Godot project configuration file. */
@@ -64,11 +64,7 @@ function validateOptions(options: UpdateGodotProjectVersionOptions): void {
     throw new Error("version must not be empty.");
   }
 
-  const normalizedVersion = validSemver(options.version);
-  if (
-    options.validateSemver !== false &&
-    (normalizedVersion === null || normalizedVersion !== options.version)
-  ) {
+  if (options.validateSemver !== false && !isSemanticVersion(options.version)) {
     throw new Error(
       `version must be a valid semantic version; received ${JSON.stringify(options.version)}.`,
     );

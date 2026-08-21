@@ -42,12 +42,8 @@
     "version",
     "cli"
   ],
-  "dependencies": {
-    "semver": "^7.7.4"
-  },
   "devDependencies": {
     "@types/node": "^24.10.1",
-    "@types/semver": "^7.7.1",
     "typescript": "^7.0.2"
   },
   "engines": {

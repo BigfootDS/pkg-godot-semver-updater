@@ -6,7 +6,7 @@ const { join } = require("node:path");
 const { promisify } = require("node:util");
 const test = require("node:test");
 
-const { updateGodotProjectVersion } = require("../dist/index.js");
+const { isSemanticVersion, updateGodotProjectVersion } = require("../dist/index.js");
 const execFile = promisify(execFileCallback);
 
 async function createProject(content) {
@@ -77,6 +77,16 @@ test("rejects an invalid semantic version by default", async () => {
     updateGodotProjectVersion({ projectPath, version: "v1.2.3" }),
     /valid semantic version/,
   );
+});
+
+test("validates strict Semantic Versioning 2.0.0 versions without a dependency", () => {
+  for (const version of ["0.0.0", "1.2.3", "1.2.3-beta.1", "1.2.3-rc.1+build.42"]) {
+    assert.equal(isSemanticVersion(version), true, version);
+  }
+
+  for (const version of ["1.2", "01.2.3", "1.02.3", "1.2.03", "v1.2.3", "1.2.3-01", "1.2.3+"]) {
+    assert.equal(isSemanticVersion(version), false, version);
+  }
 });
 
 test("allows a non-semantic version when requested", async () => {

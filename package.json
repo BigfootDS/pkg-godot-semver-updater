@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BigfootDS/pkg-godot-semver-updater.git"
+    "url": "https://github.com/BigfootDS/pkg-godot-semver-updater"
   },
   "type": "commonjs",
   "bugs": {
@@ -36,6 +36,10 @@
     "README.md",
     "LICENSE"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "keywords": [
     "godot",
     "semver",

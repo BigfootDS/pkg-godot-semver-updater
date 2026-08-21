@@ -1,0 +1,56 @@
+{
+  "name": "@bigfootds/godot-semver-updater",
+  "version": "0.0.1",
+  "description": "Update a Godot project's application version from Node.js or the command line.",
+  "license": "MIT",
+  "author": "BigfootDS",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "test": "npm run build && node --test test/*.test.js",
+    "pack:check": "npm pack --dry-run",
+    "prepack": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BigfootDS/pkg-godot-semver-updater.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/BigfootDS/pkg-godot-semver-updater/issues"
+  },
+  "homepage": "https://github.com/BigfootDS/pkg-godot-semver-updater#readme",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "godot-semver-updater": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "godot",
+    "semver",
+    "version",
+    "cli"
+  ],
+  "dependencies": {
+    "semver": "^7.7.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/semver": "^7.7.1",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

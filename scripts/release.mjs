@@ -32,6 +32,13 @@ export function findNonConventionalCommit(messages) {
   return messages.find((message) => !isMergeCommit(message) && releaseTypeForCommit(message) === undefined);
 }
 
+export function parseCommitMessages(logOutput) {
+  return logOutput
+    .split("\0")
+    .map((message) => message.trim())
+    .filter((message) => message.length > 0);
+}
+
 /** Bump a stable semantic version by one release level. */
 export function bumpVersion(version, releaseType) {
   const match = versionPattern.exec(version);
@@ -111,9 +118,7 @@ function createReleasePlan() {
   const manifest = readJson(packagePath);
   const lastTag = getLastReleaseTag();
   const lastVersion = lastTag.slice(1);
-  const messages = runGit(["log", "--format=%B%x00", `${lastTag}..HEAD`])
-    .split("\0")
-    .filter((message) => message.length > 0);
+  const messages = parseCommitMessages(runGit(["log", "--format=%B%x00", `${lastTag}..HEAD`]));
   const releaseType = determineReleaseType(messages);
 
   if (messages.length === 0) {

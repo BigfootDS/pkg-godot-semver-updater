@@ -12,7 +12,7 @@ async function loadReleaseTools() {
 }
 
 test("calculates the highest release required by conventional commits", async () => {
-  const { determineReleaseType, findNonConventionalCommit } = await loadReleaseTools();
+  const { determineReleaseType, findNonConventionalCommit, parseCommitMessages } = await loadReleaseTools();
 
   assert.equal(determineReleaseType(["docs: explain releases", "fix: repair parser"]), "patch");
   assert.equal(determineReleaseType(["deps: update the development toolchain"]), "patch");
@@ -25,6 +25,10 @@ test("calculates the highest release required by conventional commits", async ()
   assert.equal(determineReleaseType(["A non-conventional commit"]), undefined);
   assert.equal(findNonConventionalCommit(["fix: repair parser", "A non-conventional commit"]), "A non-conventional commit");
   assert.equal(findNonConventionalCommit(["Merge pull request #12 from BigfootDS/fix-parser"]), undefined);
+  assert.deepEqual(
+    parseCommitMessages("fix: repair parser\n\0\nci: configure releases\n\0\n"),
+    ["fix: repair parser", "ci: configure releases"],
+  );
 });
 
 test("bumps stable semantic versions", async () => {
